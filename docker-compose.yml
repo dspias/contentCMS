@@ -7,14 +7,14 @@ services:
   nginx:
     image: trust-review_nginx:development
     build:
-      context: docker/dev/nginx
+      context: docker/nginx
       dockerfile: Dockerfile
     volumes:
-      - ./:/var/www/apps
-      - ./docker/dev/nginx/logs:/var/log/nginx
+      - ./:/var/www
+      - ./docker/nginx/logs:/var/log/nginx
     ports:
       # Laravel port
-      - 8080:80
+      - 8000:80
     links:
       - php
 
@@ -22,83 +22,59 @@ services:
   php:
     image: trust-review_php:development
     build:
-      context: docker/dev/php
+      context: docker/php
       dockerfile: Dockerfile
     volumes:
-      - ./apps/:/var/www/apps
+      - ./src:/var/www/src
     environment:
       # If you down want to use xDebug, set remote_enable=0
       XDEBUG_CONFIG: "remote_enable=0 idekey=PHPSTORM"
       PHP_IDE_CONFIG: "serverName=Docker"
     links:
-      - postgres
-      - postgres-testing
-      - redis
+      - mysql
       - mailhog
 
-  # PostgreSQL database container
-  postgres:
+  # MySQL database container
+  mysql:
     build:
-      context: docker/dev/postgres
+      context: docker/mysql
       dockerfile: Dockerfile
     volumes:
       # Database volume
-      - database:/var/lib/postgresql/data
-      # Temp volume to allow using dumps
-      - ./docker/dev/postgres/dumps/:/tmp/
+      - database:/var/lib/mysql
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
     ports:
-      - 54321:5432
+      - 3306:3306
     environment:
-      - LC_ALL=C.UTF-8
-      - POSTGRES_DB=app
-      - POSTGRES_USER=app
-      - POSTGRES_PASSWORD=app
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=app
+      - MYSQL_USER=app
+      - MYSQL_PASSWORD=app
 
   adminer:
     image: adnan007/adminer
     restart: always
     ports:
-      - 8082:8080
+      - 8002:8080
     environment:
-      - ADMINER_DEFAULT_SERVER=postgres
-      - ADMINER_DEFAULT_DRIVER=pgsql
+      - ADMINER_DEFAULT_DRIVER=server
+      - ADMINER_DEFAULT_SERVER=mysql
       - ADMINER_DEFAULT_USERNAME=app
       - ADMINER_DEFAULT_PASSWORD=app
       - ADMINER_DEFAULT_DB=app
 
-  # PostgreSQL testing database container
-  postgres-testing:
-    build:
-      context: docker/dev/postgres
-      dockerfile: Dockerfile
-    environment:
-      - LC_ALL=C.UTF-8
-      - POSTGRES_DB=app
-      - POSTGRES_USER=app
-      - POSTGRES_PASSWORD=app
-
-  # Redis container
-  redis:
-    build:
-      context: docker/dev/redis
-      dockerfile: Dockerfile
-    volumes:
-      - redis:/data
-    ports:
-      - 63791:6379
-
   # Mailhog container (SMTP testing)
   mailhog:
     build:
-      context: docker/dev/mailhog
+      context: docker/mailhog
       dockerfile: Dockerfile
     ports:
-      - 8026:8025
+      - 8003:8025
       
 ######### Volumes ###################################
 
 volumes:
   database:
     driver: local
-  redis:
-    driver: local
+    

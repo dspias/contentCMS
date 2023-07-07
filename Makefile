@@ -93,31 +93,7 @@ migrate-seed: db-migrate-seed
 
 # Dump database into file
 db-dump:
-	docker-compose exec postgres pg_dump -U app -d app > docker/postgres/dumps/dump.sql
-
-
-#-----------------------------------------------------------
-# Redis
-#-----------------------------------------------------------
-
-redis:
-	docker-compose exec redis redis-cli
-
-redis-flush:
-	docker-compose exec redis redis-cli FLUSHALL
-
-redis-install:
-	docker-compose exec php composer require predis/predis
-
-
-#-----------------------------------------------------------
-# Queue
-#-----------------------------------------------------------
-
-# Restart queue process
-queue-restart:
-	docker-compose exec php php artisan queue:restart
-
+	docker-compose exec mysql mysqldump -U app -d app > docker/mysql/dumps/dump.sql
 
 #-----------------------------------------------------------
 # Testing
@@ -172,12 +148,12 @@ tinker:
 
 # Copy the Laravel environment file
 env:
-	cp .env.docker apps/.env
+	cp .env.docker src/.env
 
 # Add permissions for Laravel cache and storage folders
 permissions:
-	sudo chmod -R 777 apps/bootstrap/cache
-	sudo chmod -R 777 apps/storage
+	sudo chmod -R 777 src/bootstrap/cache
+	sudo chmod -R 777 src/storage
 
 # Permissions alias
 perm: permissions
@@ -210,6 +186,24 @@ git-wip:
 	git commit -m "WIP"
 
 #-----------------------------------------------------------
+# Reinstallation
+#-----------------------------------------------------------
+
+# Laravel
+reinstall-laravel:
+	sudo rm -rf src
+	mkdir src
+	docker-compose restart
+	docker-compose exec php composer create-project --prefer-dist laravel/laravel .
+	sudo chown ${USER}:${USER} -R src
+	sudo chmod -R 777 src/bootstrap/cache
+	sudo chmod -R 777 src/storage
+	sudo rm src/.env
+	cp .env.docker src/.env
+	docker-compose exec php php artisan key:generate --ansi
+	docker-compose exec php php artisan --version
+
+#-----------------------------------------------------------
 # Clearing
 #-----------------------------------------------------------
 
@@ -220,18 +214,3 @@ remove-volumes:
 # Remove all existing networks (usefull if network already exists with the same attributes)
 prune-networks:
 	docker network prune
-
-# Laravel
-reinstall-laravel:
-	sudo rm -rf apps
-	mkdir apps
-	docker-compose restart
-	docker-compose exec php composer create-project --prefer-dist laravel/laravel .
-# 	sudo chown ${USER}:${USER} -R apps
-	sudo chmod -R 777 apps/bootstrap/cache
-	sudo chmod -R 777 apps/storage
-	sudo rm apps/.env
-	cp .env.docker apps/.env
-	docker-compose exec php php artisan key:generate --ansi
-	docker-compose exec php composer require predis/predis
-	docker-compose exec php php artisan --version
