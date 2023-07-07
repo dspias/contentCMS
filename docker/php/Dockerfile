@@ -50,6 +50,14 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 RUN chmod 0755 /usr/bin/composer
 
+# Install nodejs
+RUN curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh && bash nodesource_setup.sh && apt-get -y --force-yes install nodejs
+
+# Upgrading Node
+RUN npm cache clean -f
+RUN npm install -g n
+RUN n stable
+
 # Clean up
 RUN apt-get clean
 RUN apt-get -y autoremove
