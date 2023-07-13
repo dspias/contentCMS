@@ -35,6 +35,27 @@ class Content extends Resource
     public static $with = ['writer', 'workProvider'];
 
     /**
+     * Default ordering for index query.
+     *
+     * @var array
+     */
+    public static $sort = [
+        'delivery_date' => 'asc',
+        'id' => 'desc',
+    ];
+    
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+    
+            return $query->orderBy(key(static::$sort), reset(static::$sort));
+        }
+    
+        return $query;
+    }
+
+    /**
      * The columns that should be searched.
      *
      * @var array
@@ -84,9 +105,11 @@ class Content extends Resource
                 ->rules(['nullable', 'integer']),
 
             Date::make(__('Date of Entry'), 'created_at')
+                ->sortable()
                 ->exceptOnForms(),
 
             Date::make(__('Date of Receive'), 'delivery_date')
+                ->sortable()
                 ->rules(['nullable']),
             
             Date::make(__('Date of Submission'), 'delivered_at')
