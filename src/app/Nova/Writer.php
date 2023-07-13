@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Writer extends Resource
@@ -58,13 +59,15 @@ class Writer extends Resource
                 ->hideFromIndex()
                 ->rules(['required', 'string', 'max:150']),
             
-            Number::make(__('Word Rate (BDT)'), 'commision')
+            Number::make(__('Word Rate (BDT)'), 'commission')
                 ->step(0.01)
                 ->rules(['required', 'numeric', 'max:150']),
 
             Trix::make(__('Details'), 'details')
                 ->hideFromIndex()
                 ->rules(['nullable']),
+
+            HasMany::make('Contents'),
         ];
     }
 

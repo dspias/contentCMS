@@ -6,6 +6,7 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Student extends Resource
@@ -64,6 +65,8 @@ class Student extends Resource
             Trix::make(__('Details'), 'details')
                 ->hideFromIndex()
                 ->rules(['nullable']),
+            
+            HasMany::make('Contents'),
         ];
     }
 

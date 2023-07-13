@@ -18,7 +18,7 @@ class WorkProvider extends Model
         'name',
         'email',
         'address',
-        'commision',
+        'commission',
     ];
 
     //get contents

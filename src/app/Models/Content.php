@@ -20,6 +20,16 @@ class Content extends Model
         'price',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'delivery_date' => 'date',
+        'delivered_at' => 'date',
+    ];
+
     //get student
     public function student()
     {
