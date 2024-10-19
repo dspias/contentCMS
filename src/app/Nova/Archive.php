@@ -145,7 +145,8 @@ class Archive extends Resource
                 })->exceptOnForms(),
 
             Text::make(__('Writer commission (BDT)'), function() {
-                    return ($this->word_count) ? $this->word_count * $this->writer->commission : 'Pelase add total number of words';
+                $words = ceil($this->word_count / 250);
+                return $words * $this->writer->commission;
                 })->exceptOnForms(),
 
             Boolean::make(__('Paid to writer'), 'paid_to_writer')

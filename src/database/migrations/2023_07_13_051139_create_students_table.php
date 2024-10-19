@@ -16,7 +16,7 @@ class CreateStudentsTable extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code')->unique()->nullable();
+            $table->integer('code')->unique()->nullable();
             $table->string('university')->nullable();
             $table->string('email')->nullable();
             $table->text('details')->nullable();

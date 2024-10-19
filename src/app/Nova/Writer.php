@@ -59,9 +59,9 @@ class Writer extends Resource
                 ->hideFromIndex()
                 ->rules(['required', 'string', 'max:150']),
             
-            Number::make(__('Word Rate (BDT)'), 'commission')
+            Number::make(__('250 words rate (BDT)'), 'commission')
                 ->step(0.01)
-                ->rules(['required', 'numeric', 'max:150']),
+                ->rules(['required', 'numeric', 'min:1']),
 
             Trix::make(__('Details'), 'details')
                 ->hideFromIndex()

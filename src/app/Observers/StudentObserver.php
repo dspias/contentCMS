@@ -14,7 +14,14 @@ class StudentObserver
      */
     public function created(Student $student)
     {
-        $student->code = uniqid('stu_');
+        $code = 10000;
+        $previousRow = Student::where('id', '<', $student->id)
+                ->orderBy('id', 'desc')
+                ->first();
+        if ($previousRow) {
+            $code = $previousRow->code + 1;
+        }
+        $student->code = $code;
         $student->save();
     }
 

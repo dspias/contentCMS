@@ -104,7 +104,7 @@ class Content extends Resource
             Number::make(__('Word Count'), 'word_count')
                 ->hideFromIndex()
                 ->step(1)
-                ->rules(['nullable', 'integer']),
+                ->rules(['required', 'integer']),
 
             Date::make(__('Date of Entry'), 'created_at')
                 ->sortable()
@@ -122,7 +122,7 @@ class Content extends Resource
             Date::make(__('Summitted at'), 'delivered_at')
                 ->onlyOnDetail(),
             
-            Trix::make(__('Result'), 'context')
+            Trix::make(__('Result (Count as submitted)'), 'context')
                 ->hideFromIndex()
                 ->rules(['nullable']),
             
@@ -145,7 +145,8 @@ class Content extends Resource
                 })->exceptOnForms(),
 
             Text::make(__('Writer commission (BDT)'), function() {
-                    return ($this->word_count) ? $this->word_count * $this->writer->commission : 'Pelase add total number of words';
+                    $words = ceil($this->word_count / 250);
+                    return $words * $this->writer->commission;
                 })->exceptOnForms(),
 
             Boolean::make(__('Paid to writer'), 'paid_to_writer')

@@ -18,7 +18,7 @@ class CreateWritersTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('address');
-            $table->double('commission', 3, 1);
+            $table->double('commission', 9, 1);
             $table->text('details')->nullable();
             $table->timestamps();
         });

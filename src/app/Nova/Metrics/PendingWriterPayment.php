@@ -34,10 +34,11 @@ class PendingWriterPayment extends Value
         $query->whereNotNULL('delivered_at')->where('paid_to_writer', false);
 
         $totalCommission = $query->get()->sum(function ($content) {
-            return ($content->word_count * $content->writer->commission);
+            $words = ceil($content->word_count / 250);
+            return $words * $content->writer->commission;
         });
 
-        return $this->result($totalCommission)->currency('BDT');
+        return $this->result($totalCommission)->currency('BDT ');
     }
 
     /**
