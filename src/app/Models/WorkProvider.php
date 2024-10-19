@@ -26,4 +26,10 @@ class WorkProvider extends Model
     {
         return $this->hasMany(Content::class, 'work_provider_id', 'id');
     }
+
+    //get Archive
+    public function Archive()
+    {
+        return $this->hasMany(Content::class, 'work_provider_id', 'id')->whereNotNull('delivered_at');
+    }
 }

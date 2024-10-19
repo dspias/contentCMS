@@ -26,4 +26,10 @@ class Writer extends Model
     {
         return $this->hasMany(Content::class, 'writer_id', 'id');
     }
+
+    //get Archive
+    public function Archive()
+    {
+        return $this->hasMany(Content::class, 'writer_id', 'id')->whereNotNull('delivered_at');
+    }
 }

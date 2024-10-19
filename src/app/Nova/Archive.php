@@ -12,7 +12,7 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Content extends Resource
+class Archive extends Resource
 {
     /**
      * The model the resource corresponds to.
@@ -47,7 +47,7 @@ class Content extends Resource
     
     public static function indexQuery(NovaRequest $request, $query)
     {
-        $query->whereNull('delivered_at');
+        $query->whereNotNull('delivered_at');
         if (empty($request->get('orderBy'))) {
             $query->getQuery()->orders = [];
     

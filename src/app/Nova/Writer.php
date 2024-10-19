@@ -68,6 +68,8 @@ class Writer extends Resource
                 ->rules(['nullable']),
 
             HasMany::make('Contents'),
+            
+            HasMany::make('Archive'),
         ];
     }
 

@@ -7,15 +7,15 @@
     "require": {
         "php": "^7.3|^8.0",
         "browner12/helpers": "^3.5",
+        "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
+        "laravel/nova": "*",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "realrashid/sweet-alert": "^7.0",
-        "spatie/laravel-medialibrary": "9.0.0",
-        "fideloper/proxy": "^4.2",
-        "laravel/nova": "*"
+        "spatie/laravel-medialibrary": "9.0.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

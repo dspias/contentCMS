@@ -28,6 +28,7 @@ class Content extends Model
     protected $casts = [
         'delivery_date' => 'date',
         'delivered_at' => 'date',
+        'received_at' => 'date',
     ];
 
     //get student

@@ -28,9 +28,13 @@ class CreateContentsTable extends Migration
             $table->double('price', 8, 2);
             $table->double('paid', 8, 2)->nullable();
 
+            $table->boolean('paid_to_writer')->default(false);
+            $table->boolean('paid_to_provider')->default(false);
+
             $table->text('context')->nullable();
             $table->text('comment')->nullable();
 
+            $table->date('received_at')->nullable();
             $table->date('delivery_date')->nullable();
             $table->date('delivered_at')->nullable();
             $table->timestamps();

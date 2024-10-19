@@ -62,12 +62,20 @@ class WorkProvider extends Resource
             Number::make(__('Commission (%)'), 'commission')
                 ->step(0.01)
                 ->rules(['required', 'numeric', 'max:100']),
+            
+            Number::make(__('Total commission (£)'), function() {
+                    $total = $this->contents()->sum('price');
+                    return ($total * $this->commission)/100;
+                })
+                ->showOnDetail(),
 
             Trix::make(__('Details'), 'details')
                 ->hideFromIndex()
                 ->rules(['nullable']),
 
             HasMany::make('Contents'),
+            
+            HasMany::make('Archive'),
         ];
     }
 

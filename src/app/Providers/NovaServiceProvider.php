@@ -2,10 +2,16 @@
 
 namespace App\Providers;
 
+use App\Nova\Metrics\CompletedAssignment;
 use Illuminate\Support\Facades\Gate;
-use Laravel\Nova\Cards\Help;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use App\Nova\Metrics\PendingAssignment;
+use App\Nova\Metrics\PendingStudentPayment;
+use App\Nova\Metrics\PendingWorkProviderPayment;
+use App\Nova\Metrics\PendingWriterPayment;
+use App\Nova\Metrics\TotalRevenue;
+use App\Nova\Metrics\UpcomingDeadline;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -56,7 +62,13 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function cards()
     {
         return [
-            new Help,
+            UpcomingDeadline::make(),
+            PendingAssignment::make(),
+            CompletedAssignment::make(),
+            PendingStudentPayment::make(),
+            PendingWorkProviderPayment::make(),
+            PendingWriterPayment::make(),
+            TotalRevenue::make(),
         ];
     }
 
