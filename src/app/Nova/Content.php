@@ -44,16 +44,16 @@ class Content extends Resource
         'delivery_date' => 'asc',
         'id' => 'desc',
     ];
-    
+
     public static function indexQuery(NovaRequest $request, $query)
     {
         $query->whereNull('delivered_at');
         if (empty($request->get('orderBy'))) {
             $query->getQuery()->orders = [];
-    
+
             return $query->orderBy(key(static::$sort), reset(static::$sort));
         }
-    
+
         return $query;
     }
 
@@ -88,15 +88,15 @@ class Content extends Resource
             BelongsTo::make('WorkProvider', 'workProvider', 'App\Nova\WorkProvider')
                 ->searchable()
                 ->required(),
-                
+
             BelongsTo::make('Writer', 'writer', 'App\Nova\Writer')
                 ->searchable()
                 ->nullable(),
-            
+
             Text::make(__('Unit Name'), 'unit_name')
                 ->hideFromIndex()
                 ->rules(['required_without:unit_code,', 'string', 'max:100']),
-            
+
             Text::make(__('Unit Code'), 'unit_code')
                 ->hideFromIndex()
                 ->rules(['required_without:unit_name,', 'string', 'max:100']),
@@ -118,49 +118,49 @@ class Content extends Resource
             Date::make(__('Date of Submission'), 'delivery_date')
                 ->sortable()
                 ->required(),
-            
+
             Date::make(__('Summitted at'), 'delivered_at')
                 ->onlyOnDetail(),
-            
+
             Trix::make(__('Result (Count as submitted)'), 'context')
                 ->hideFromIndex()
                 ->rules(['nullable']),
-            
+
             Trix::make(__('Comment'), 'comment')
                 ->hideFromIndex()
                 ->rules(['nullable']),
-            
+
             Number::make(__('Price (£)'), 'price')
                 ->hideFromIndex()
                 ->step(0.01)
                 ->rules(['required', 'numeric']),
-            
+
             Number::make(__('Amount Paid (£)'), 'paid')
                 ->hideFromIndex()
                 ->step(0.01)
                 ->rules(['nullable', 'numeric']),
-            
-            Text::make(__('Payable (£)'), function() {
-                    return $this->price - ($this->paid ?? 0);
-                })->exceptOnForms(),
 
-            Text::make(__('Writer commission (BDT)'), function() {
-                    $words = ceil($this->word_count / 250);
-                    return $words * $this->writer->commission;
-                })->exceptOnForms(),
+            Text::make(__('Payable (£)'), function () {
+                return $this->price - ($this->paid ?? 0);
+            })->exceptOnForms(),
+
+            Text::make(__('Writer commission (BDT)'), function () {
+                $words = ceil($this->word_count / 250);
+                return $words * $this->writer->commission;
+            })->exceptOnForms(),
 
             Boolean::make(__('Paid to writer'), 'paid_to_writer')
                 ->hideFromIndex()
                 ->rules(['nullable']),
 
-            Text::make(__('Work Provider commission (£)'), function() {
-                return ($this->price * $this->workProvider->commission)/100;
+            Text::make(__('Work Provider commission (£)'), function () {
+                return ($this->price * $this->workProvider->commission) / 100;
             })->exceptOnForms(),
 
             Boolean::make(__('Paid to provider'), 'paid_to_provider')
                 ->hideFromIndex()
                 ->rules(['nullable']),
-            
+
         ];
     }
 
@@ -206,5 +206,10 @@ class Content extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    public static function label()
+    {
+        return 'Works';
     }
 }

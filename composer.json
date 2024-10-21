@@ -1,0 +1,5 @@
+{
+    "require": {
+        "gregoriohc/laravel-nova-theme-responsive": "^0.8.1"
+    }
+}
